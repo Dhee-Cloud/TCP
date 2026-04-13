@@ -1,0 +1,211 @@
+NOTE
+1. 
+if err != nil in Go
+//The if err != nil literally means "err is not equal to nil"
+It tests whether an error occurred by comparing the error variable to nil. 
+In Go, when an operation succeeds, the error return value is nil (equivalent to null in other languages).
+When something goes wrong, the error contains details about what failed.
+
+2. log.fatal(err) //shutdown and log the error message. Fatal is a function from Go's log package that terminates your program immediately after logging a message. 
+
+3. != means not equal to
+defer ln.close() //defer means at the end of the function close the port. so here it means after logging close the port
+
+4. fmt.Println("Server listening on port 8080...") 
+//This line prints a message to the console indicating that 
+// the server is now listening for incoming connections on port 8080
+
+5. for {
+	//The for { statement creates an infinite loop in Go. 
+	// It's a fundamental control structure that repeatedly executes the code block indefinitely until the program is explicitly stopped or a break statement is encountered.
+}
+
+6. listener is a variable that holds the TCP listener object created by net.Listen. 
+   same as error is a variable that holds any error that occurs during the creation of the TCP listener
+
+
+7.//SCOPE
+OUTER SCOPE
+{
+    x := 10
+
+    INNER SCOPE
+    {
+        y := 20
+        can see x and y
+    }
+
+    outside inner scope
+    can see x only
+}
+
+8. //BUFFER
+buffer
+
+This is just a variable name.
+
+It means:
+
+a place to store data
+
+Usually in networking:
+
+it stores data coming from TCP
+
+8a. //SLICE
+What is a slice?
+
+A slice is:
+
+A flexible list of values in Go.
+
+Example:
+
+numbers := []int{10, 20, 30}
+
+This means:
+
+a list containing 10, 20, 30
+note if it was array you would have to define the number of values
+
+//arrays are created directly using
+rrays are created directly using square brackets with a fixed size.
+
+Example:
+
+var arr [3]int
+
+or:
+
+arr := [3]int{10, 20, 30}. //slice is flecible ray us not
+
+9. //MAKE
+make(...)
+make(...)
+
+Means:
+
+create a slice, map, or channel with memory already allocated
+
+Here it is creating a slice.
+
+- []byte
+
+This means:
+
+a slice of bytes (numbers from 0 to 255)
+
+So:
+
+[]byte
+
+= a list of bytes
+
+-- 1024
+
+This means:
+
+the size of the slice (length)
+
+So you are saying:
+
+“I want space for 1024 bytes”
+
+Whole meaning together
+buffer := make([]byte, 1024)
+
+means:
+
+Create a byte slice with room for 1024 bytes and store it in buffer.
+
+What it looks like in memory
+
+Initially:
+
+[0 0 0 0 0 0 ... 0]  (1024 zeros)
+
+It is empty space ready to be filled.
+
+Why 1024?
+
+Because in TCP:
+
+data comes in chunks
+you need a place to store incoming data
+
+So 1024 bytes is a common buffer size.
+
+10. //BUFFER is used to store data sent by client to server or server to client
+Where it is used
+1. Server side (very common)
+
+Server receives data:
+
+n, err := conn.Read(buffer)
+
+Meaning:
+
+“Client sent me data, store it in buffer”
+
+2. Client side (also common)
+
+Client receives response:
+
+n, err := conn.Read(buffer)
+
+Meaning:
+
+“Server sent me data, store it in buffer”
+
+11. //STRUCTS
+They collect any type of data together
+
+
+
+12. //IO
+The io.ReadAll() function takes a reader (in this case, the connection object) and reads all bytes from it until EOF (end of file) is reached.
+
+
+
+
+
+
+
+
+
+.
+func main () {
+	ln, err := net.Listen("tcp", "localhost:8080")
+// net package from Go creates a TCP listener on the specified address and port,
+// in this case "localhost:8080".
+ 	if err !=nil {
+//if there is an error while creating the TCP listener, it will log the error and exit the program.
+//err is the standard idiomatic name for a variable of the built-in error type
+	log.fatal(err)
+	//log.fatal(err) statement is a panic-and-exit mechanism that terminates your entire program 
+	//immediately when an error occurs
+	panic(err)
+	//statement forces the Go runtime to stop execution immediately and display an error message in the form of a stack trace.
+ }
+ 	defer ln.close()
+//The defer ln.Close() statement schedules the Close() method to execute automatically when the main  function exits.
+//it closes all underlying sockets,frees up the ports and rejects new connections.
+//defer close is basically saying when the function finishes running close the listener and free up the resources automatically.
+
+//next enter an infinite loop that waits for incoming client connections and accepts the connections
+for {
+conn, err := ln.Accept()
+//when incoming request arrives use the accept function to accept the connection.
+//This returns a connect object representing the clients connection
+if ! := nil {
+	log.fatal(err)
+//if there is an error while accepting the connection, it will log the error and exit the program.
+}
+//once a connection is established we pass it to handle connections in a new goroutine using go handleConnection(conn)
+go handleconnection(conn)
+}//handling of the connection
+
+3.
+The panic(err) statement is a built-in Go function that immediately stops normal program execution and triggers a panic state. When called, it halts all running code, prints the error message along with a stack trace showing where the panic occurred, and then terminates the program with a non-zero exit code.
+
+How Pani
